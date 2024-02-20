@@ -1,10 +1,17 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.Arrays;
+import java.util.List;
+
+
 public class Main {
+
     public static void main(String[] args) {
-            ReadDoc readDoc = new ReadDoc();
-            readDoc.read();
+        final String homePath="/home/user/Downloads/";
+        final String fileName = "file-sample_100kB.doc";
+        final List<String> searchWords = Arrays.asList("vehicula","Java","jAva","Vestibulum");
+        ReadWordFile read = new ReadWordFile();
+        boolean isShortListed = read.checkForShortlisting(homePath + fileName, searchWords);
+        System.out.println("is short listed? "+isShortListed);
     }
 }

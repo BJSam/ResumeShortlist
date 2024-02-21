@@ -15,9 +15,15 @@ public class Main {
         File[] listOfFiles = folder.listFiles();
         assert listOfFiles != null;
         for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile() && listOfFile.getName().endsWith("doc")) {
-                boolean isShortListed = read.checkForShortlisting(listOfFile.getAbsolutePath(), searchWords);
-                System.out.println("is "+listOfFile.getName()+" file short listed? "+isShortListed);
+            if (listOfFile.isFile()) {
+                boolean isShortListed;
+                if(listOfFile.getName().endsWith("doc")){
+                    isShortListed = read.checkForShortlisting(listOfFile.getAbsolutePath(), searchWords,false);
+                    System.out.println("is "+listOfFile.getName()+" file short listed? "+isShortListed);
+                }else if (listOfFile.getName().endsWith("docx")){
+                    isShortListed = read.checkForShortlisting(listOfFile.getAbsolutePath(), searchWords,true);
+                    System.out.println("is "+listOfFile.getName()+" file short listed? "+isShortListed);
+                }
             }
         }
     }

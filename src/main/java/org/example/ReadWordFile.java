@@ -8,11 +8,13 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ReadWordFile {
     private String readDoc(String filePath){
-        File file = null;
-        WordExtractor extractor = null;
+        File file;
+        WordExtractor extractor;
         try
         {
             file = new File(filePath);
@@ -24,7 +26,7 @@ public class ReadWordFile {
         }
         catch (Exception exep)
         {
-            exep.printStackTrace();
+            System.out.println("Error"+exep.getMessage());
             return "";
         }
     }
@@ -38,21 +40,25 @@ public class ReadWordFile {
             extractedText = ex.getText();
             fis.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error"+e.getMessage());
         }
         return extractedText;
     }
-    public boolean checkForShortlisting(String filePath,List<String> keyWordsToSearch, boolean isDocx){
+    public double findPercentageMatched(String filePath,List<String> keyWordsToSearch, boolean isDocx){
+        String resumeData;
+        int matchedWords = 0;
         if(isDocx){
-            String docxTxt=readDocx(filePath);
-            return keyWordsToSearch.stream()
-                    .map(String::toLowerCase)
-                    .anyMatch(docxTxt::contains);
+            resumeData=readDocx(filePath);
         }else{
-            String docTxt=readDoc(filePath);
-            return keyWordsToSearch.stream()
-                    .map(String::toLowerCase)
-                    .anyMatch(docTxt::contains);
+            resumeData=readDoc(filePath);
         }
+        for(String keyWord: keyWordsToSearch){
+            Pattern pattern = Pattern.compile("\\b"+ keyWord + "\\b", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(resumeData);
+            if (matcher.find()){
+                matchedWords++;
+            }
+        }
+        return (double) matchedWords /keyWordsToSearch.size() * 100;
     }
 }
